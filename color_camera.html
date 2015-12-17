@@ -7,9 +7,17 @@
 
   <script src="build/tracking-min.js"></script>
   <script src="build/dat.gui.min.js"></script>
-  <script src="assets/stats.min.js"></script>
   <script src="assets/color_camera_gui.js"></script>
-
+  <script type="text/javascript" src="build/three.js"></script>
+  <script type="text/javascript" src="build/jquery-1.9.0.js"></script>
+  <script type="text/javascript" src="build/stats.js"></script>
+  <script type="text/javascript" src="build/dat.gui.js"></script>
+  <script type="text/javascript" src="build/tween.min.js"></script>
+  <script type="text/javascript" src="build/TrackballControls.js"></script>
+  <script type="text/javascript" src="build/KeyboardState.js"></script>
+  <script type="text/javascript" src="build/TransformControls.js"></script>
+  <script type="text/javascript" src="build/SkeletonHelper.js"></script>
+  <script type='text/javascript' src='build/DAT.GUI.min.js'></script>
   <style>
   video, canvas {
     margin-left: 100px;
@@ -19,14 +27,10 @@
   </style>
 </head>
 <body>
-  <div class="demo-title">
-    <p><a href="http://trackingjs.com" target="_parent">tracking.js</a> － choose the colors you want to detect through the controls on the right</p>
-  </div>
-
-  <div class="demo-frame">
-    <div class="demo-container">
-      <video id="video" width="600" height="450" preload autoplay loop muted controls></video>
-      <canvas id="canvas" width="600" height="450"></canvas>
+  <div class="demo-frame" >
+    <div class="demo-container" >
+      <video id="video" width="480" height="270"  style="left: 500px; z-index: 1000;" preload autoplay loop muted controls></video>
+      <canvas id="canvas" width="480" height="270" style="left: 500px; z-index: 1000;" ></canvas>
     </div>
   </div>
 
