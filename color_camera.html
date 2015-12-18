@@ -5,7 +5,7 @@
 	<title>tracking.js - color with camera</title>
 	<link rel="stylesheet" href="assets/demo.css">
 
-	<script src="build/tracking-min.js"></script>
+	<script src="build/tracking.js"></script>
 	<script src="build/dat.gui.min.js"></script>
 	<script src="assets/color_camera_gui.js"></script>
 	<script type="text/javascript" src="build/three.js"></script>
@@ -38,8 +38,8 @@
 <body>
 	<div class="demo-frame" >
 		<div class="demo-container" >
-			<video id="video" width="480" height="270"  style="position:fixed; margin: 0; z-index: 1000;" preload autoplay loop muted controls></video>
-			<canvas id="canvas" width="480" height="270" style="position:fixed; margin: 0; z-index: 1000;" ></canvas>
+			<video id="video" width="600" height="450"  style="position:fixed; margin: 0; z-index: 1000;" preload autoplay loop muted controls></video>
+			<canvas id="canvas" width="600" height="450" style="position:fixed; margin: 0; z-index: 1000;" ></canvas>
 		</div>
 	</div>
 	<div id="Stats-output">
@@ -50,12 +50,47 @@
 
 	<script>
 		window.onload = function() {
+     var bandera = false;
+     var limitPiernas = false;
+     var limitBrazos = false;
 			var video = document.getElementById('video');
 			var canvas = document.getElementById('canvas');
 			var context = canvas.getContext('2d');
+      tracking.ColorTracker.registerColor('blue', function(r, g, b) {
+        var threshold = 150,
+          dx = r - 0,
+          dy = g - 0,
+          dz = b - 255;
 
+        if ((r - g) >= threshold && (b - g) >= threshold) {
+          return true;
+        }
+        return dx * dx + dy * dy + dz * dz < 19600;
+      });
+      tracking.ColorTracker.registerColor('green', function(r, g, b) {
+        var threshold = 150,
+          dx = r - 0,
+          dy = g - 255,
+          dz = b - 0;
+
+        if ((r - g) >= threshold && (b - g) >= threshold) {
+          return true;
+        }
+        return dx * dx + dy * dy + dz * dz < 19600;
+      });
+      tracking.ColorTracker.registerColor('red', function(r, g, b) {
+        var threshold = 150,
+          dx = r - 255,
+          dy = g - 0,
+          dz = b - 0;
+
+        if ((r - g) >= threshold && (b - g) >= threshold) {
+          return true;
+        }
+        return dx * dx + dy * dy + dz * dz < 19600;
+      });
 			//var tracker = new tracking.ColorTracker();
-			var tracker = new tracking.ColorTracker(['magenta', 'cyan', 'yellow']);
+			var tracker = new tracking.ColorTracker();
 			var contexto;
 
 			tracking.track('#video', tracker, { camera: true });
@@ -64,22 +99,60 @@
 				context.clearRect(0, 0, canvas.width, canvas.height);
 
 				event.data.forEach(function(rect) {
-					if (rect.color === 'custom') {
-						rect.color = tracker.customColor;
-					}
-
-					context.strokeStyle = rect.color;
-					context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-					context.font = '11px Helvetica';
-					context.fillStyle = "#fff";
-					context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-					context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-					if (rect.color = "cyan"){
-						console.log(tracker.customColor);
-						mesh.skeleton.bones[0].rotation.z = rect.y;
-					}
-					
+					if (rect.color == 'blue') {
+						//rect.color = tracker.customColor;
+            if(bandera == false && -mesh.skeleton.bones[0].rotation.x<45 *Math.PI/180){ //HUESO TERMINA ROTACION POSITIVA
+              mesh.skeleton.bones[0].rotation.x -= Math.PI/180;
+              if(-mesh.skeleton.bones[0].rotation.x >45*Math.PI/180){
+                bandera = true;
+              }
+            }else if(bandera == true){ //HUESO TERMINA ROTACION NEGATIVA
+              mesh.skeleton.bones[0].rotation.x+= Math.PI/180;
+              if(mesh.skeleton.bones[0].rotation.x > -Math.PI/180){
+                bandera = false;
+              }
+            }
+          }
+          if(rect.color == 'green'){
+            if(limitPiernas == false && -mesh.skeleton.bones[7].rotation.x<45 *Math.PI/180){ //HUESO TERMINA ROTACION POSITIVA
+              mesh.skeleton.bones[7].rotation.x -= Math.PI/180;
+              if(-mesh.skeleton.bones[7].rotation.x > 45*Math.PI/180){
+                limitPiernas = true;
+              }
+            }else if(limitPiernas == true ){ //HUESO TERMINA ROTACION NEGATIVA
+              mesh.skeleton.bones[7].rotation.x += Math.PI/180;
+              if(mesh.skeleton.bones[7].rotation.x > 45*Math.PI/180){
+                limitPiernas = false;
+              }
+            }
+            if(limitPiernas == true && -mesh.skeleton.bones[9].rotation.x<45 *Math.PI/180){ //HUESO TERMINA ROTACION POSITIVA
+              mesh.skeleton.bones[9].rotation.x -= Math.PI/180;
+            }else if(limitPiernas == false ){ //HUESO TERMINA ROTACION NEGATIVA
+              mesh.skeleton.bones[9].rotation.x += Math.PI/180;
+            }
+          }
+          if(rect.color == 'red'){
+            if(limitBrazos == false && -mesh.skeleton.bones[2].rotation.x<45 *Math.PI/180){ //HUESO TERMINA ROTACION POSITIVA
+              mesh.skeleton.bones[2].rotation.z -= Math.PI/180;
+              if(-mesh.skeleton.bones[2].rotation.z > 45*Math.PI/180){
+                limitBrazos = true;
+              }
+            }else if(limitBrazos == true ){ //HUESO TERMINA ROTACION NEGATIVA
+              mesh.skeleton.bones[2].rotation.z += Math.PI/180;
+              if(mesh.skeleton.bones[2].rotation.z > 30*Math.PI/180){
+                limitBrazos = false;
+              }
+            }
+            if(limitBrazos == true && -mesh.skeleton.bones[4].rotation.x<45 *Math.PI/180){ //HUESO TERMINA ROTACION POSITIVA
+              mesh.skeleton.bones[4].rotation.z -= Math.PI/180;
+            }else if(limitBrazos == false ){ //HUESO TERMINA ROTACION NEGATIVA
+              mesh.skeleton.bones[4].rotation.z += Math.PI/180;
+            }
+          }
+  				context.strokeStyle = rect.color;
+  				context.strokeRect(rect.x, rect.y, rect.width, rect.height);
 				});
+
 			});
 			 initGUIControllers(tracker);
 
@@ -109,6 +182,7 @@
 			camera.position.y = 30;
 			camera.position.z = -50;
 			camera.lookAt(new THREE.Vector3(0, 0, 0));
+
 
 				//grid
 			var size = 50, step = 3;
@@ -144,9 +218,16 @@
 					animation.play();
 					scene.add(mesh);
 					animation.play();
-					tween.start();
+					//tween.start();
 				}, '../assets/models');
-
+      mouseTrack = new THREE.TrackballControls(camera, renderer.domElement); //función que modifica la camara segun el movimiento del mouse
+      mouseTrack.rotateSpeed=0.8; //velocidad de rotacion de la cámara
+      mouseTrack.zoomSpeed=1.5; //velocidad de acercamiento/alejamiento de la camara
+      mouseTrack.panSpeed=1.0; //velocidad de traslación de la camara
+      mouseTrack.noZoom=false;
+      mouseTrack.noPan=false;
+      mouseTrack.staticMoving=true;
+      mouseTrack.dynamicDampingFactor = 0.3;
 			function render() {
 			
 
@@ -154,7 +235,7 @@
 				requestAnimationFrame(render);
 				renderer.render(scene, camera);
 			
-				//mouseTrack.update();
+				mouseTrack.update();
 			}
 
 			function onWindowResize() {
