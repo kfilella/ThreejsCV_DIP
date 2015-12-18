@@ -54,7 +54,9 @@
 			var canvas = document.getElementById('canvas');
 			var context = canvas.getContext('2d');
 
-			var tracker = new tracking.ColorTracker();
+			//var tracker = new tracking.ColorTracker();
+			var tracker = new tracking.ColorTracker(['magenta', 'cyan', 'yellow']);
+			var contexto;
 
 			tracking.track('#video', tracker, { camera: true });
 
@@ -72,6 +74,11 @@
 					context.fillStyle = "#fff";
 					context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
 					context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+					if (rect.color = "cyan"){
+						console.log(tracker.customColor);
+						mesh.skeleton.bones[0].rotation.z = rect.y;
+					}
+					
 				});
 			});
 			 initGUIControllers(tracker);
