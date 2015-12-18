@@ -57,37 +57,37 @@
 			var canvas = document.getElementById('canvas');
 			var context = canvas.getContext('2d');
       tracking.ColorTracker.registerColor('blue', function(r, g, b) {
-        var threshold = 150,
+        var threshold = 100,
           dx = r - 0,
           dy = g - 0,
           dz = b - 255;
 
-        if ((r - g) >= threshold && (b - g) >= threshold) {
+        if ((b - r) >= threshold && (b - g) >= threshold) {
           return true;
         }
-        return dx * dx + dy * dy + dz * dz < 19600;
+        return false;
       });
       tracking.ColorTracker.registerColor('green', function(r, g, b) {
-        var threshold = 150,
+        var threshold = 50,
           dx = r - 0,
           dy = g - 255,
           dz = b - 0;
 
-        if ((r - g) >= threshold && (b - g) >= threshold) {
+        if ((g - r) >= threshold && (g - b) >= threshold) {
           return true;
         }
-        return dx * dx + dy * dy + dz * dz < 19600;
+        return false;
       });
       tracking.ColorTracker.registerColor('red', function(r, g, b) {
-        var threshold = 150,
+        var threshold = 100,
           dx = r - 255,
           dy = g - 0,
           dz = b - 0;
 
-        if ((r - g) >= threshold && (b - g) >= threshold) {
+        if ((r - g) >= threshold && (r - b) >= threshold) {
           return true;
         }
-        return dx * dx + dy * dy + dz * dz < 19600;
+        return false;
       });
 			//var tracker = new tracking.ColorTracker();
 			var tracker = new tracking.ColorTracker();
